@@ -84,3 +84,139 @@ h1 {
     width: 100px;
     height: 100px;
 }
+/* ------------------------------
+   Search section layout
+-------------------------------- */
+.search-section {
+  margin-bottom: 30px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap; /* helps on smaller screens */
+}
+
+/* ------------------------------
+   City input styling
+-------------------------------- */
+#city-input {
+  flex: 1;
+  min-width: 220px; /* keeps it usable when wrapping */
+  padding: 12px 20px;
+  border-radius: 25px;
+  border: 2px solid #ddd;
+  outline: none;
+  font-size: 1rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+#city-input:focus {
+  border-color: #6a5cff;
+  box-shadow: 0 0 0 4px rgba(106, 92, 255, 0.18);
+}
+
+/* ------------------------------
+   Search button styling
+-------------------------------- */
+#search-btn {
+  padding: 12px 30px;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 600;
+  background: linear-gradient(135deg, #6a5cff, #00c2ff);
+  transition: transform 0.15s ease, opacity 0.15s ease, box-shadow 0.15s ease;
+  white-space: nowrap; /* prevents text breaking */
+}
+
+#search-btn:hover {
+  transform: translateY(-1px);
+  opacity: 0.95;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
+}
+
+#search-btn:active {
+  transform: translateY(0);
+  opacity: 0.9;
+}
+
+/* ------------------------------
+   Responsive tweak (stack nicely)
+-------------------------------- */
+@media (max-width: 480px) {
+  .search-section {
+    gap: 10px;
+  }
+
+  #search-btn {
+    width: 100%;
+  }
+}
+/* ------------------------------
+   Error message styling
+-------------------------------- */
+.error-message {
+  background: #ffe5e7;            /* light red/pink */
+  color: #7a0b14;                 /* dark red */
+  padding: 14px 16px;
+  border-radius: 14px;
+  border-left: 6px solid #d11a2a; /* thick red border */
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.06);
+}
+
+.error-icon {
+  font-size: 1.4rem;
+  line-height: 1;
+  margin-top: 2px;
+}
+
+.error-title {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.error-text {
+  margin: 4px 0 0;
+  font-size: 0.95rem;
+  opacity: 0.95;
+}
+/* Spinner */
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 5px solid #f3f3f3;
+  border-top: 5px solid #667eea;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* Spin animation */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Loading container (center spinner + text) */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 18px;
+}
+
+.loading-text {
+  margin: 0;
+  font-size: 1rem;
+  opacity: 0.9;
+}
