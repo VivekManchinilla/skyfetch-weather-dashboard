@@ -220,3 +220,99 @@ h1 {
   font-size: 1rem;
   opacity: 0.9;
 }
+/* TODO: Style .forecast-section */
+.forecast-section {
+  margin-top: 30px;
+  padding-top: 30px;
+  border-top: 2px solid #eee;
+}
+
+/* TODO: Style .forecast-title */
+.forecast-title {
+  font-size: 1.5rem;
+  color: #333;
+  margin-bottom: 20px;
+  text-align: center;
+}
+/* TODO: Style .forecast-container */
+.forecast-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 15px;
+}
+
+/* TODO: Style .forecast-card */
+.forecast-card {
+  background: linear-gradient(135deg, #f7f9fc, #eef3ff);
+  padding: 20px;
+  border-radius: 15px;
+  text-align: center;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* TODO: Add hover effect for forecast cards */
+.forecast-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.14);
+}
+/* TODO: Style day name in forecast cards */
+.forecast-day {
+  font-size: 1.1rem;
+  color: #333;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+/* TODO: Style forecast temperature */
+.forecast-temp {
+  font-size: 1.8rem;
+  color: #667eea;
+  font-weight: bold;
+  margin: 10px 0;
+}
+
+/* TODO: Style forecast description */
+.forecast-desc {
+  font-size: 0.9rem;
+  color: #666;
+  text-transform: capitalize;
+}
+
+/* TODO: Style forecast icons */
+.forecast-icon {
+  width: 60px;
+  height: 60px;
+}
+/* TODO: Add media query for mobile devices */
+@media (max-width: 768px) {
+  /* Adjust forecast grid for mobile */
+  .forecast-container {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  /* Adjust card padding and sizes */
+  .forecast-card {
+    padding: 15px;
+    border-radius: 12px;
+  }
+
+  /* Adjust font sizes */
+  .forecast-day {
+    font-size: 1rem;
+  }
+
+  .forecast-temp {
+    font-size: 1.5rem;
+  }
+
+  .forecast-desc {
+    font-size: 0.85rem;
+  }
+
+  .forecast-icon {
+    width: 52px;
+    height: 52px;
+  }
+}
