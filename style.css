@@ -316,3 +316,81 @@ h1 {
     height: 52px;
   }
 }
+/* -------------------------------
+   Recent Searches Section
+-------------------------------- */
+
+/* TODO: Style .recent-searches-section */
+.recent-searches-section {
+  margin: 20px 0;
+  display: none; /* keep hidden until JS shows it when searches exist */
+}
+
+/* TODO: Style recent searches heading */
+.recent-searches-heading {
+  font-size: 1rem;
+  color: #666;
+  margin-bottom: 10px;
+  text-align: left;
+}
+
+/* TODO: Style #recent-searches-container */
+#recent-searches-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: flex-start; /* change to center if you prefer */
+}
+
+/* TODO: Style .recent-search-btn */
+.recent-search-btn {
+  padding: 8px 16px;
+  background: #f0f0f0;
+  border: 1px solid #ddd;
+  border-radius: 20px; /* pill shape */
+  cursor: pointer;
+  font-size: 0.9rem;
+
+  /* remove default button look */
+  outline: none;
+
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease,
+    color 0.2s ease, border-color 0.2s ease;
+}
+
+/* TODO: Add hover effect for recent search buttons */
+.recent-search-btn:hover {
+  background: #667eea; /* theme color */
+  color: #fff;
+  border-color: #667eea;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+/* TODO: Add active/click effect */
+.recent-search-btn:active {
+  transform: scale(0.95);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+}
+/* Clear History Button */
+.clear-history-btn {
+  font-size: 0.8rem;
+  padding: 5px 10px;
+  background: transparent;         /* or use a light red like #fff0f0 */
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  cursor: pointer;
+
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease,
+    transform 0.1s ease;
+}
+
+.clear-history-btn:hover {
+  background: #ffecec;             /* light red */
+  color: #d93025;                  /* red text */
+  border-color: #f5b5b5;
+}
+
+.clear-history-btn:active {
+  transform: scale(0.96);
+}

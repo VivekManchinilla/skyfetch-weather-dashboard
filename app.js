@@ -279,7 +279,7 @@ WeatherApp.prototype.showWelcome = function () {
   // Display in weather display area
   this.weatherDisplay.innerHTML = welcomeHTML;
 };
-const app = new WeatherApp('YOUR_API_KEY');
+const app = new WeatherApp(CONFIG.API_KEY);
 // TODO: Create handleSearch method
 WeatherApp.prototype.handleSearch = function () {
   // Get city from input
@@ -498,3 +498,218 @@ WeatherApp.prototype.displayForecast = function (data) {
   // Append to weather display (don't replace current weather!)
   this.weatherDisplay.innerHTML += forecastSection;
 };
+function WeatherApp(apiKey) {
+  this.apiKey = apiKey;
+  this.apiUrl = "https://api.openweathermap.org/data/2.5/weather";
+  this.forecastUrl = "https://api.openweathermap.org/data/2.5/forecast";
+
+  // Existing DOM references
+  this.searchBtn = document.getElementById("search-btn");
+  this.cityInput = document.getElementById("city-input");
+  this.weatherDisplay = document.getElementById("weather-display");
+
+  // ✅ New DOM references
+  this.recentSearchesSection = document.getElementById("recent-searches-section");
+  this.recentSearchesContainer = document.getElementById("recent-searches-container");
+
+  // ✅ Initialize recent searches array
+  this.recentSearches = [];
+
+  // ✅ Set maximum number of recent searches to save
+  this.maxRecentSearches = 5;
+
+  this.init();
+}
+// TODO: Create loadRecentSearches method
+WeatherApp.prototype.loadRecentSearches = function () {
+  // Get recent searches from localStorage
+  const saved = localStorage.getItem("recentSearches");
+
+  // If data exists, parse it and store in this.recentSearches
+  if (saved) {
+    try {
+      const parsed = JSON.parse(saved);
+      this.recentSearches = Array.isArray(parsed) ? parsed : [];
+    } catch (e) {
+      this.recentSearches = [];
+    }
+  } else {
+    this.recentSearches = [];
+  }
+
+  // Display the recent searches
+  this.displayRecentSearches();
+};
+// TODO: Create saveRecentSearch method
+WeatherApp.prototype.saveRecentSearch = function (city) {
+  if (!city) return;
+
+  // Convert city to title case for consistency (simple: first letter uppercase)
+  const trimmed = city.trim();
+  if (!trimmed) return;
+
+  const cityName =
+    trimmed.charAt(0).toUpperCase() + trimmed.slice(1).toLowerCase();
+
+  // Check if city already exists in array (remove it so we can add to front)
+  const index = this.recentSearches.indexOf(cityName);
+  if (index > -1) {
+    this.recentSearches.splice(index, 1);
+  }
+
+  // Add city to the beginning of array
+  this.recentSearches.unshift(cityName);
+
+  // Keep only the last maxRecentSearches searches
+  if (this.recentSearches.length > this.maxRecentSearches) {
+    this.recentSearches = this.recentSearches.slice(0, this.maxRecentSearches);
+  }
+
+  // Save to localStorage
+  localStorage.setItem("recentSearches", JSON.stringify(this.recentSearches));
+
+  // Update display
+  this.displayRecentSearches();
+};
+// TODO: Create displayRecentSearches method
+WeatherApp.prototype.displayRecentSearches = function () {
+  // Guard: if DOM refs are missing, don't crash
+  if (!this.recentSearchesSection || !this.recentSearchesContainer) return;
+
+  // Clear existing buttons
+  this.recentSearchesContainer.innerHTML = "";
+
+  // If no recent searches, hide the section
+  if (!this.recentSearches || this.recentSearches.length === 0) {
+    this.recentSearchesSection.style.display = "none";
+    return;
+  }
+
+  // Show the section
+  this.recentSearchesSection.style.display = "block";
+
+  // Create a button for each recent search
+  this.recentSearches.forEach(
+    function (city) {
+      const btn = document.createElement("button");
+      btn.className = "recent-search-btn";
+      btn.type = "button";
+      btn.textContent = city;
+
+      // Click handler (bind this)
+      btn.addEventListener(
+        "click",
+        function () {
+          this.cityInput.value = city;
+          this.getWeather(city);
+        }.bind(this)
+      );
+
+      this.recentSearchesContainer.appendChild(btn);
+    }.bind(this)
+  );
+};
+WeatherApp.prototype.getWeather = async function(city) {
+    this.showLoading();
+    this.searchBtn.disabled = true;
+    this.searchBtn.textContent = 'Searching...';
+    
+    const currentUrl = `${this.apiUrl}?q=${city}&appid=${this.apiKey}&units=metric`;
+    
+    try {
+        const [currentWeather, forecastData] = await Promise.all([
+            axios.get(currentUrl),
+            this.getForecast(city)
+        ]);
+        
+        this.displayWeather(currentWeather.data);
+        this.displayForecast(forecastData);
+        
+        // TODO: Save this successful search to recent searches
+        // this.saveRecentSearch(city);
+        
+        // TODO: Save as last searched city
+        // localStorage.setItem('lastCity', city);
+        
+    } catch (error) {
+        console.error('Error:', error);
+        if (error.response && error.response.status === 404) {
+            this.showError('City not found. Please check spelling and try again.');
+        } else {
+            this.showError('Something went wrong. Please try again later.');
+        }
+    } finally {
+        this.searchBtn.disabled = false;
+        this.searchBtn.textContent = 'Search';
+    }
+};
+WeatherApp.prototype.init = function () {
+  // Existing event listeners
+  this.searchBtn.addEventListener("click", this.handleSearch.bind(this));
+  this.cityInput.addEventListener(
+    "keypress",
+    function (e) {
+      if (e.key === "Enter") {
+        this.handleSearch();
+      }
+    }.bind(this)
+  );
+
+  // ✅ Load recent searches from localStorage
+  this.loadRecentSearches();
+
+  // ✅ Load last searched city
+  this.loadLastCity();
+};
+// TODO: Create loadLastCity method
+WeatherApp.prototype.loadLastCity = function () {
+  // Get last city from localStorage
+  const lastCity = localStorage.getItem("lastCity");
+
+  // If exists, fetch weather for that city
+  if (lastCity) {
+    this.getWeather(lastCity);
+  } else {
+    // Show welcome message if no last city
+    this.showWelcome();
+  }
+};
+WeatherApp.prototype.showWelcome = function () {
+  const welcomeHTML = `
+    <div class="welcome-message">
+      <div class="welcome-icon" aria-hidden="true">🌤️</div>
+      <h2 class="welcome-heading">Welcome to WeatherApp</h2>
+      <p class="welcome-text">Search for a city to get started.</p>
+      <p class="welcome-examples">Try: <strong>London</strong>, <strong>Paris</strong>, <strong>Tokyo</strong></p>
+    </div>
+  `;
+
+  this.weatherDisplay.innerHTML = welcomeHTML;
+};
+<div id="recent-searches-section" class="recent-searches-section">
+  <div style="display: flex; justify-content: space-between; align-items: center;">
+    <h4 class="recent-searches-heading">Recent Searches</h4>
+
+    
+    <button id="clear-history-btn" class="clear-history-btn" type="button">
+      Clear
+    </button>
+  </div>
+
+  <div id="recent-searches-container"></div>
+</div>
+// TODO: Create clearHistory method
+WeatherApp.prototype.clearHistory = function () {
+  // Confirm with user
+  if (confirm("Clear all recent searches?")) {
+    this.recentSearches = [];
+    localStorage.removeItem("recentSearches");
+    this.displayRecentSearches();
+  }
+};
+// In init() method
+// TODO: Add clear history button listener
+// const clearBtn = document.getElementById('clear-history-btn');
+// if (clearBtn) {
+//     clearBtn.addEventListener('click', this.clearHistory.bind(this));
+// }
